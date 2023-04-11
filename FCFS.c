@@ -1,69 +1,65 @@
 #include<stdio.h>
-void sort_at(float FCFS[100][6], int n){
-    
+void sortarr(float arr[][6], int n){
+    for(int i=0; i<n; i++){
+        for(int j=0; j<n-1; j++){
+            int index = i;
+            if(arr[j][2] > arr[i][2]){
+                index = j;
+            }
+            int temp = arr[index][0];
+            arr[index][0] = arr[i][0];
+            arr[i][0] = temp;
+            
+            temp = arr[index][1];
+            arr[index][1] = arr[i][1];
+            arr[i][1] = temp;
+            
+            temp = arr[index][2];
+            arr[index][2] = arr[i][2];
+            arr[i][2] = temp;
+        }
+    }
 }
-void printarr(float FCFS[100][6], int n){
-    printf("\n");
+void printarr(float arr[][6], int n){
+    printf("num\tbt\tat\tct\twt\ttt\n");
     for(int i=0; i<n; i++){
         for(int j=0; j<6; j++){
-            printf("%.2f\t", FCFS[i][j]);
+            printf("%.2f\t", arr[i][j]);
         }
         printf("\n");
     }
+    printf("\n");
 }
 int main(){
     int n;
     printf("Enter the number of processes : ");
     scanf("%d", &n);
-    float FCFS[100][6];
+    float proc[10][6], sumw=0, sumt=0, avgw, avgt;
+    printf("Enter the bursttime;\n");
+    for(int i=0; i<n; i++){
+        scanf("%f", &proc[i][1]);
+        proc[i][0] = i+1;
+    }
+    printf("Enter the arrivaltime;\n");
+    for(int i=0; i<n; i++){
+        scanf("%f", &proc[i][2]);
+    }
+    sortarr(proc, n);
 
-    printf("Enter the arrival and burst time for processes;\n");
-    for(int i=0; i<n; i++){
-        scanf("%f %f", &FCFS[i][1], &FCFS[i][2]);
-        FCFS[i][0] = i+1;
-    }
-    // sort_at(FCFS, n);
-    for(int i=0; i<n; i++){
-        int index=i;
-        for(int j=i+1; j<n; j++){
-            if(FCFS[i][1] > FCFS[j][1]){
-                index = j;
-            }
-            int temp = FCFS[index][0];
-            FCFS[index][0] = FCFS[i][0];
-            FCFS[i][0] = temp;
-            
-            temp = FCFS[index][1];
-            FCFS[index][1] = FCFS[i][1];
-            FCFS[i][1] = temp;
-            
-            temp = FCFS[index][2];
-            FCFS[index][2] = FCFS[i][2];
-            FCFS[i][2] = temp;
-        }
-    }
-    printarr(FCFS, n);
-    //calculation for completion time;
-    FCFS[0][3] = 0;
+    proc[0][3] = proc[0][1];
     for(int i=1; i<n; i++){
-        FCFS[i][3] = FCFS[i][2] + FCFS[i-1][3];
+        proc[i][3] = proc[i-1][3] + proc[i][1];
     }
-    //calculation for arrival and tat time;
+    //waiting and turnaround time;
     for(int i=0; i<n; i++){
-        FCFS[i][4] = FCFS[i][3] - FCFS[i][1] - FCFS[i][2];
-        FCFS[i][5] = FCFS[i][3] - FCFS[i][1];
+        proc[i][4] = proc[i][3] - proc[i][2] - proc[i][1];
+        proc[i][5] = proc[i][3] - proc[i][2];
+        sumw = sumw + proc[i][4];
+        sumt = sumt + proc[i][5];
     }
-    //calculating average of times;
-    float sumwi=0, sumti=0, avgwi, avgti;
-    for(int i=0; i<0; i++){
-        sumwi += FCFS[i][4]; 
-        sumti += FCFS[i][5]; 
-    }
-    avgwi = sumwi / n;
-    avgti = sumti / n;
+    avgw = sumw/n;
+    avgt = sumt/n;
 
-    //printing values;
-    printf("proc\ta-time\tb-time\tc-time\tw-time\tta-time");
-    printarr(FCFS, n);
-    printf("The average waiting time and\naverage turn around time is %.2f, %.2f.\n", avgwi, avgti);
+    printarr(proc, n);
+    printf("avg(w = %f, t = %f)\n", avgw, avgt);
 }
