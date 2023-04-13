@@ -1,5 +1,5 @@
 #include<stdio.h>
-void sortarr(float arr[][6], int n){
+void sort_at(float arr[][6], int n){
     for(int i=0; i<n; i++){
         for(int j=0; j<n-1; j++){
             int index = i;
@@ -31,6 +31,7 @@ void printarr(float arr[][6], int n){
     printf("\n");
 }
 int main(){
+
     int n;
     printf("Enter the number of processes : ");
     scanf("%d", &n);
@@ -44,29 +45,14 @@ int main(){
     for(int i=0; i<n; i++){
         scanf("%f", &proc[i][2]);
     }
-    sortarr(proc, n);
+    sort_at(proc, n);
 
     proc[0][3] = proc[0][1];
-    for(int i=1; i<n; i++){
-        if(proc[i-1][3] < proc[i][2]){
-            proc[i][3] = proc[i][2] + proc[i][1];
-        }
-        else{
-            proc[i][3] = proc[i-1][3] + proc[i][1];
-        }
-    }
-    //waiting and turnaround time;
     for(int i=0; i<n; i++){
-        proc[i][4] = proc[i][3] - proc[i][2] - proc[i][1];
-        proc[i][5] = proc[i][3] - proc[i][2];
-        sumw = sumw + proc[i][4];
-        sumt = sumt + proc[i][5];
+        proc[i][3] = proc[i-1][3] + proc[i][1];
+        if()
     }
-    avgw = sumw/n;
-    avgt = sumt/n;
 
-    printarr(proc, n);
-    printf("avg(w = %f, t = %f)\n", avgw, avgt);
 
     return 0;
 }
